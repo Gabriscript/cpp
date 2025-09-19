@@ -1,9 +1,10 @@
 
 CXX = c++
-FLAGS = -Wall -Wextra -Werror -Wshadow std =c11
-SRC = main.cpp ScalarConverter.cpp
+FLAGS = -Wall -Wextra -Werror -std=c++11
+SRC = main.cpp ScalarConverter.cpp utils.cpp
 OBJ = $(SRC:.cpp=.o)
-NAME = converter
+NAME = convert
+
 all: $(NAME)
 
 $(NAME): $(OBJ)

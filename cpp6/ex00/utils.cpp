@@ -1,5 +1,10 @@
 #include "ScalarConverter.hpp"
 
+std::array<std::string, 6> pseudoLiterals = {
+    "+inff", "-inff", "nanf",
+    "+inf", "-inf", "nan"
+};
+
 bool my_isprint(char ch)
 {
     return std::isprint(static_cast<unsigned char>(ch));
