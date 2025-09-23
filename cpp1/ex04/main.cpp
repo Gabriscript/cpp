@@ -41,7 +41,7 @@ int main(int ac,char **av)
 	
 	
     std::ifstream inputFile(av[1]);
-	std::ofstream outputFile(newFileName);;
+	std::ofstream outputFile(newFileName);
     if (!inputFile || !outputFile)
     {
 		std::cerr << "Failed to open  file!" << std::endl;
