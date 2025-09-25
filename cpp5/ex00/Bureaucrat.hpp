@@ -1,26 +1,26 @@
 #pragma once
 
 #include <iostream>
-#define MAXVALUE 1
-#define MINVALUE 150
+
 
 class Bureaucrat
 {
 private:
 	const std::string m_name = "Mario";
-	int m_grade = 60;
+	int m_grade = 15;
 
 public:
-	Bureaucrat();
-	Bureaucrat(Bureaucrat &bureaucrat);
-	Bureaucrat& operator=(Bureaucrat const &bureaucrat);
-	Bureaucrat(const std::string name, int grade);
-	~Bureaucrat();
+    Bureaucrat();
+    Bureaucrat(const std::string name, int grade);
+    Bureaucrat(const Bureaucrat &bureaucrat);
+    Bureaucrat &operator=(const Bureaucrat &bureaucrat);
+    ~Bureaucrat();
 
 	std::string getName() const;
 	int getGrade() const;
 	void Increase(int value);
 	void Decrease(int value);
+
 
 	class GradeTooHighException: public std::exception
 	{
@@ -41,6 +41,6 @@ public:
 
 
 };
-	std::ostream& operator<<(std::ostream& os, const Bureaucrat& b);
+std::ostream& operator<<(std::ostream& os, const Bureaucrat& b);
 
 

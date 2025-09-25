@@ -4,7 +4,7 @@
 
 class Bureaucrat;
 
-class AForm
+class Form
 {
 private:
 	std::string const m_name = "Jack";
@@ -13,12 +13,12 @@ private:
 	const int m_executeGrade = 50;
 	
 public:
-	AForm();
-	AForm(const AForm &form);
-	AForm& operator=(const AForm  &form);
-	~AForm();
+	Form();
+	Form(const Form &form);
+	Form& operator=(const Form  &form);
+	~Form();
 
-	AForm(std::string name, int signGrade, int execGrade);
+	Form(std::string name, int signGrade, int execGrade);
 
 	std::string getName() const;
 	int getSignGrade() const;
@@ -52,4 +52,4 @@ public:
 };
 
 
-std::ostream& operator<<(std::ostream& os, const AForm& form);
+std::ostream& operator<<(std::ostream& os, const Form& form);

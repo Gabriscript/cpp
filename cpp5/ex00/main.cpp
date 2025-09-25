@@ -17,8 +17,18 @@ int main()
 	{
 		std::cerr << e.what() << '\n';
 	}
+
+    std::cout << "\nTrying Toad grade too high.." << std::endl;
+	try
+	{
+		Bureaucrat Toad("Toad",0);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 	
-	std::cout << "\nTrying Peach grade too high.." << std::endl;
+	std::cout << "\nTrying Peach grade negative.." << std::endl;
 	try
 	{
 		Bureaucrat Peach("Peach",-2);
@@ -31,9 +41,10 @@ int main()
 	std::cout << "\nTrying to increase Bowser grade too high.." << std::endl;
 	try
 	{
+        int test = -5;
 		Bureaucrat bowser("Bowser",3);
-		bowser.Increase(-5);
-		std::cout << bowser << std::endl;
+		bowser.Increase(test);
+
 	}
 	catch(const std::exception& e)
 	{
