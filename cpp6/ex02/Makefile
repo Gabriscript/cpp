@@ -1,9 +1,9 @@
 
 CXX = c++
 FLAGS = -Wall -Wextra -Werror -Wshadow 
-SRC = main.cpp
+SRC = main.cpp A.cpp B.cpp C.cpp Base.cpp
 OBJ = $(SRC:.cpp=.o)
-NAME = Brain
+NAME = identify
 all: $(NAME)
 
 $(NAME): $(OBJ)
