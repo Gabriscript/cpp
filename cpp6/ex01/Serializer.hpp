@@ -1,13 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <stdint.h>
+#include <cstdint>
+#include "Data.hpp"
 
-struct Data
-{
-	std::string name;
-    int age;
-};
 
 class Serializer
 {
