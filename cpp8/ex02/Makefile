@@ -2,7 +2,7 @@ CXX = c++
 FLAGS = -Wall -Wextra -Werror 
 SRC = main.cpp
 OBJ = $(SRC:.cpp=.o)
-NAME = templates1
+NAME = mutantStack
 all: $(NAME)
 
 $(NAME): $(OBJ)

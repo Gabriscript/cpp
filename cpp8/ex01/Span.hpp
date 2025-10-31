@@ -2,29 +2,32 @@
 #include <algorithm>
 #include <stdexcept>
 #include <vector>
+#include <cmath>
 
 class Span
 {
 private:
-    unsigned int m_size;
-    std::vector<int>	m_numbers;
+	unsigned int m_size;
+	std::vector<int> m_numbers;
 
+	Span();
 
-    Span();
 public:
-    Span(unsigned int N);
-    Span(const Span& other);
-	Span& operator=(const Span& other);
-    ~Span();
+	Span(unsigned int N);
+	Span(const Span &other);
+	Span &operator=(const Span &other);
+	~Span();
 
-    void addnumber(int num);
-    unsigned int shortestSpan() const;
-    unsigned int longestSpan() const;
+	void addNumber(int num);
+	unsigned int shortestSpan() const;
+	unsigned int longestSpan() const;
 
-
-
-    // Fill all elements in the numbers vector with the value 35
-    //fill(numbers.begin(), numbers.end(), 35);
+	template <typename Iterator>
+	void addRange(Iterator begin, Iterator end)
+	{
+		unsigned int distance = std::distance(begin, end);
+		if (m_numbers.size() + distance > m_size)
+			throw std::runtime_error("too many elements");
+		m_numbers.insert(m_numbers.end(), begin, end);
+	}
 };
-
-
