@@ -47,15 +47,9 @@ bool BitcoinExchange::isCSVParsed(const std::string &filename)
 		auto dateAndRate = GetDateAndRate(line);
 		m_data[dateAndRate.first] = dateAndRate.second;
 	}
-
+    
 	file.close();
 	return true;
-}
-
-std::string GetInfo(const std::string &line, size_t start, size_t end)
-{
-	std::string date = line.substr(start, end);
-	return date;
 }
 
 bool isValidFloat(const std::string &value)
@@ -65,7 +59,7 @@ bool isValidFloat(const std::string &value)
 	{
 		if (c == '.') dotCount++;
 		if (dotCount > 1) return false;
-		if(!std::isdigit(c) || c != '.') return false;
+		if(!std::isdigit(c) && c != '.') return false;
 	}
 	return true;
 
@@ -149,7 +143,7 @@ bool BitcoinExchange::isInputProcessed(const std::string &filename)
 	while (std::getline(file, line))
 	{
 		if (line.empty())continue;		
-
+    
 		size_t pipePos = line.find('|');
 
 		if (pipePos == std::string::npos)
@@ -160,8 +154,9 @@ bool BitcoinExchange::isInputProcessed(const std::string &filename)
 		if (pipePos2 != std::string::npos)
 			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
 
-		std::string date = GetInfo(line, 0, pipePos - 1);
-		std::string value = GetInfo(line, pipePos + 1, line.find('\n') - 1);
+        std::string date = line.substr(0, pipePos - 1);
+        std::string value = line.substr(pipePos + 2); 
+        value.erase(0, value.find_first_not_of(" \t"));
 
 		if (date.empty() || value.empty()|| !isValidDate(date) ||!isValidValue(value))
 			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
@@ -169,7 +164,7 @@ bool BitcoinExchange::isInputProcessed(const std::string &filename)
 
 		std::string closestDate = findClosestDate(date);
 		float exchangeRate = m_data[closestDate];
-        float result = value * exchangeRate;
+        float result = std::stof(value) * exchangeRate;
         
         std::cout << date << " => " << value << " = " << result << std::endl;
 	}
