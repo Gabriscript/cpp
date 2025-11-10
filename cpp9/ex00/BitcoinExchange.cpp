@@ -55,11 +55,13 @@ bool BitcoinExchange::isCSVParsed(const std::string &filename)
 bool isValidFloat(const std::string &value)
 {
 	int dotCount = 0;
+	int hypenCount = 0;
 	for( auto c : value)
 	{
 		if (c == '.') dotCount++;
+		if (c == '-') hypenCount++;
 		if (dotCount > 1) return false;
-		if(!std::isdigit(c) && c != '.') return false;
+		if(!std::isdigit(c) && c != '.' && c != '-') return false;
 	}
 	return true;
 
@@ -71,6 +73,11 @@ bool isValidValue(const std::string &value)
 	try
 	{
 		float rate = std::stof(value);
+		if (rate < 0)
+			std::cerr << "Error: not a positive number." << std::endl;
+		else if (rate > 1000)
+			 std::cerr << "Error: too large a number." << std::endl;
+
 		return (rate > 0 && rate <= 1000);
 	}
 	catch (...)
@@ -158,17 +165,18 @@ bool BitcoinExchange::isInputProcessed(const std::string &filename)
         std::string value = line.substr(pipePos + 2); 
         value.erase(0, value.find_first_not_of(" \t"));
 
-		if (date.empty() || value.empty()|| !isValidDate(date) ||!isValidValue(value))
+		if (date.empty() || value.empty()|| !isValidDate(date))
 			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
 
-
+		if(!isValidValue(value))
+			continue;
+		
 		std::string closestDate = findClosestDate(date);
 		float exchangeRate = m_data[closestDate];
         float result = std::stof(value) * exchangeRate;
         
         std::cout << date << " => " << value << " = " << result << std::endl;
 	}
-
 	file.close();
 	return true;
 }

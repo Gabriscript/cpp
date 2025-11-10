@@ -10,20 +10,14 @@ int main(int ac, char **av)
 		{
 			BitcoinExchange btc;
 
-			// if data.csv is not found or empty 
-			// 	return error
-
-			// if file is av[1] is empty or invalid
-			// 	return error
-
-
+			if (!btc.isInputProcessed(av[1]))
+				return 1;
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
+			return 1;
 		}
 		
-
-
 	return 0;
 }
