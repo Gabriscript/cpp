@@ -168,8 +168,7 @@ bool BitcoinExchange::isInputProcessed(const std::string &filename)
 		if (date.empty() || value.empty()|| !isValidDate(date))
 			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
 
-		if(!isValidValue(value))
-			continue;
+		if(!isValidValue(value))continue;
 		
 		std::string closestDate = findClosestDate(date);
 		float exchangeRate = m_data[closestDate];
