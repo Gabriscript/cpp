@@ -5,18 +5,22 @@ BitcoinExchange::BitcoinExchange()
 	if (!isCSVParsed("data.csv"))
 		std::cerr << "Error: data file is missing." << std::endl;
 }
+
 BitcoinExchange::BitcoinExchange(const std::string &dataFile)
 {
 	if (!isCSVParsed(dataFile))
 		std::cerr << "Error: data file " << dataFile << " is missing." << std::endl;
 }
+
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &other) : m_data(other.m_data) {}
+
 BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
 {
 	if (this != &other)
 		m_data = other.m_data;
 	return *this;
 }
+
 BitcoinExchange::~BitcoinExchange() {}
 
 std::pair<std::string, float> BitcoinExchange::GetDateAndRate(const std::string &line)
@@ -55,33 +59,54 @@ bool BitcoinExchange::isCSVParsed(const std::string &filename)
 bool isValidFloat(const std::string &value)
 {
 	int dotCount = 0;
-	int hypenCount = 0;
-	for( auto c : value)
+	int hyphenCount = 0;
+	
+	for (size_t i = 0; i < value.size(); i++)
 	{
-		if (c == '.') dotCount++;
-		if (c == '-') hypenCount++;
-		if (dotCount > 1) return false;
-		if(!std::isdigit(c) && c != '.' && c != '-') return false;
+		char c = value[i];
+		if (c == '.') 
+			dotCount++;
+		if (c == '-')
+		{
+			hyphenCount++;
+			if (i != 0)
+				return false;
+		}
+		if (dotCount > 1) 
+			return false;
+		if (!std::isdigit(c) && c != '.' && c != '-') 
+			return false;
 	}
 	return true;
-
 }
+
 bool isValidValue(const std::string &value)
 {
 	if (!isValidFloat(value))
+	{
+		std::cerr << "Error: bad input => " << value << std::endl;
 		return false;
+	}
+	
 	try
 	{
 		float rate = std::stof(value);
 		if (rate < 0)
+		{
 			std::cerr << "Error: not a positive number." << std::endl;
+			return false;
+		}
 		else if (rate > 1000)
-			 std::cerr << "Error: too large a number." << std::endl;
+		{
+			std::cerr << "Error: too large a number." << std::endl;
+			return false;
+		}
 
-		return (rate > 0 && rate <= 1000);
+		return true;
 	}
 	catch (...)
 	{
+		std::cerr << "Error: bad input => " << value << std::endl;
 		return false;
 	}
 }
@@ -121,25 +146,29 @@ bool isValidDate(const std::string &date)
 
 std::string BitcoinExchange::findClosestDate(const std::string& date)
 {
-	 auto it = m_data.lower_bound(date);
+	auto it = m_data.lower_bound(date);
 
-    if (it == m_data.begin() && it->first != date)
-        return "";
+	if (it == m_data.begin() && it->first != date)
+		return "";
 
-    if (it != m_data.end() && it->first == date)
-        return it->first;
+	if (it != m_data.end() && it->first == date)
+		return it->first;
 
-    if (it != m_data.begin())
-        --it;
+	if (it != m_data.begin())
+		--it;
 
-    return it->first;	 
+	return it->first;	 
 }
+
 bool BitcoinExchange::isInputProcessed(const std::string &filename)
 {
 	std::ifstream file(filename);
 
 	if (!file.is_open() || filename.empty())
+	{
+		std::cerr << "Error: could not open file." << std::endl;
 		return false;
+	}
 
 	std::string line = "";
 
@@ -154,28 +183,39 @@ bool BitcoinExchange::isInputProcessed(const std::string &filename)
 		size_t pipePos = line.find('|');
 
 		if (pipePos == std::string::npos)
-			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
+		{std::cerr << "Error: bad input => " << line << std::endl;continue;}
 
 		size_t pipePos2 = line.find('|', pipePos + 1);
 
 		if (pipePos2 != std::string::npos)
-			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
+		{std::cerr << "Error: bad input => " << line << std::endl;continue;	}
 
-        std::string date = line.substr(0, pipePos - 1);
-        std::string value = line.substr(pipePos + 2); 
-        value.erase(0, value.find_first_not_of(" \t"));
+		std::string date = line.substr(0, pipePos);
+		std::string value = line.substr(pipePos + 1);
+		
+		date.erase(0, date.find_first_not_of(" \t"));
+		date.erase(date.find_last_not_of(" \t") + 1);
+		value.erase(0, value.find_first_not_of(" \t"));
+		value.erase(value.find_last_not_of(" \t") + 1);
 
-		if (date.empty() || value.empty()|| !isValidDate(date))
-			{std::cerr << "Error: bad input => " << line << std::endl;continue;}
+		if (date.empty() || value.empty())
+		{std::cerr << "Error: bad input => " << line << std::endl;continue;}
 
-		if(!isValidValue(value))continue;
+		if (!isValidDate(date))
+		{std::cerr << "Error: bad input => " << line << std::endl;continue;	}
+
+		if (!isValidValue(value))continue;
 		
 		std::string closestDate = findClosestDate(date);
+		if (closestDate.empty())
+		{std::cerr << "Error: no data available for date => " << date << std::endl;continue;}
+		
 		float exchangeRate = m_data[closestDate];
-        float result = std::stof(value) * exchangeRate;
+		float result = std::stof(value) * exchangeRate;
         
-        std::cout << date << " => " << value << " = " << result << std::endl;
+		std::cout << date << " => " << value << " = " << result << std::endl;
 	}
+	
 	file.close();
 	return true;
 }

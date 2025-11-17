@@ -1,5 +1,5 @@
 CXX = c++
-FLAGS = -Wall -Wextra -Werror 
+FLAGS = -Wall -Wextra -Werror
 SRC = main.cpp RPN.cpp
 OBJ = $(SRC:.cpp=.o)
 NAME = RPN

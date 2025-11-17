@@ -1,8 +1,5 @@
 #include "RPN.hpp"
 
-#include "RPN.hpp"
-#include <cctype>
-
 RPN::RPN() {}
 RPN::RPN(const RPN& other) { *this = other; }
 
@@ -42,13 +39,13 @@ bool RPN::isParsed(const std::string &av)
 		if (isOperator(token))
 		{
 			if (m_stack.size() < 2)
-				return false;
+				return std::cerr << "Error"<< std::endl, false;
 
 			int first = m_stack.top(); m_stack.pop();
 			int second = m_stack.top(); m_stack.pop();
 
 			if (token == "/" && first == 0)
-				return false;
+				return std::cerr << "Error"<< std::endl, false;
 
 			m_stack.push(calculate(first, second, token[0]));
 		}
@@ -56,12 +53,16 @@ bool RPN::isParsed(const std::string &av)
 		{
 			for (char c : token)
 				if (!std::isdigit(c))
-					return false;
+					return std::cerr << "Error"<< std::endl, false;
 
 			m_stack.push(std::stoi(token));
 		}
 	}
+    if (m_stack.size() != 1)
+        return std::cerr << "Error"<< std::endl, false;
 
-	return (m_stack.size() == 1);
+    std::cout  << m_stack.top() << std::endl;
+    
+	return true;
 }
 
