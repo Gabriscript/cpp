@@ -24,6 +24,11 @@ public:
     template <typename Container>
     Container fordJohnsonSort(Container arr);
 
-    template<typename Container>
-    void printContainer(const Container& arr);
+	template <typename Container>
+	void printContainer(const Container &arr);
+
+	std::vector<int> generateJacobsthal(int n);
+	std::vector<int> generateJacobsthalOrder(int n);
 };
+
+#include "PmergeMe.tpp"

@@ -17,7 +17,7 @@ int main(int ac, char **av)
 		return std::cerr << "An argument is required" << std::endl, 1;
     
 	std::string str = "";
-	for (size_t i = 1; i < ac; i++)
+	for (int i = 1; i < ac; i++)
 	{
 		str += av[i];
 		if (std::isdigit(str.back()))
@@ -32,18 +32,18 @@ int main(int ac, char **av)
 	long long num;
 	while (iss >> num)
 	{
+		if (num < 0) 
+		throw std::invalid_argument("Error: only positive numbers are allowed");
+        
+		if (num > INT_MAX)
+		throw std::invalid_argument("Error: number exceeds maximum integer value");
+		
+		if (std::find(arrayVec.begin(), arrayVec.end(), num) != arrayVec.end())
+		throw std::invalid_argument("Error: duplicate numbers are not allowed");
+		
 		arrayVec.push_back(num);
 		arrayDeque.push_back(num);
 	}
-	if (num < 0) 
-		throw std::invalid_argument("Error: only positive numbers are allowed");
-        
-    if (num > INT_MAX)
-		throw std::invalid_argument("Error: number exceeds maximum integer value");
-
-	if (std::find(arrayVec.begin(), arrayVec.end(), num) != arrayVec.end())
-		throw std::invalid_argument("Error: duplicate numbers are not allowed");
-
     PmergeMe pmergeme;
 
 	auto start_vec = std::chrono::high_resolution_clock::now();
@@ -63,6 +63,6 @@ int main(int ac, char **av)
 
 	if (!isSorted(arrayVec) || !isSorted(arrayDeque))
 		return std::cerr << "Error: Sorting failed" << std::endl, 1;
-		
+
     return 0;
 }
