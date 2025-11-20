@@ -2,6 +2,8 @@
 #include <iostream>
 #include <stack>
 #include <sstream>
+#include <limits>
+#include <iomanip>
 
 class RPN
 {
@@ -11,7 +13,7 @@ public:
 	RPN &operator=(const RPN& other);
 	~RPN();
 	
-	std::stack<int> m_stack;
+	std::stack<double> m_stack;
 	bool  isParsed(const std::string &av);
 };
 
